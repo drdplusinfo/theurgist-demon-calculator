@@ -1,0 +1,80 @@
+.background-image {
+    background-position: center;
+    background-size: contain;
+}
+
+.row {
+    padding-bottom: 0.3rem;
+}
+
+.row label {
+    margin-bottom: 0;
+}
+
+#formula {
+    margin-right: 0.5em;
+}
+
+.parameter {
+    margin-left: 1em;
+    font-style: normal;
+}
+
+.modifier {
+    margin: 0.2em 1em 0 0;
+    font-style: italic;
+}
+
+.modifier > .modifier {
+    margin: 0.2em 0 0 0;
+}
+
+.spell-trait {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-style: normal;
+}
+
+.spell-trait input[type=checkbox] {
+    margin: 0;
+    position: relative;
+    left: 0.3em;
+}
+
+.forms {
+    font-size: smaller;
+    font-style: normal;
+}
+
+.panel + .forms {
+    padding-left: 0.5em;
+}
+
+ol.realm {
+    margin: 0;
+    padding: 0;
+    list-style-type: upper-roman;
+    list-style-position: inside;
+    display: inline-block;
+}
+
+ol.realm li {
+    margin: 0;
+    padding: 0;
+}
+
+input[disabled], select[disabled] {
+    cursor: not-allowed;
+}
+
+.modifier.panel {
+    padding: 0.2em;
+    background: rgba(139, 62, 37, 0.1);
+}
+
+.modifier.panel > .modifier.panel {
+    margin-left: 1em;
+}
+
+.trap {
+    font-size: small;
+}
