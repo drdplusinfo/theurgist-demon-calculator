@@ -20,13 +20,12 @@ use DrdPlus\Codes\Theurgist\DemonCode;
               <option value="<?= $demonValue ?>"
                       <?php if ($demonValue === $webPartsContainer->getCurrentDemonCode()->getValue()){ ?>selected<?php } ?>>
                   <?= DemonCode::getIt($demonValue)->translateTo('cs') ?>
+                [<?= $webPartsContainer->getTables()->getDemonsTable()->getDifficulty(DemonCode::getIt($demonValue)) ?>]
               </option>
             <?php } ?>
         </select>
       </label>
       <button type="submit">Vybrat</button>
-        <?php $demonDifficulty = $webPartsContainer->getTables()->getDemonsTable()->getDifficulty($webPartsContainer->getCurrentDemonCode()); ?>
-      <span>[<?= $demonDifficulty->getValue() ?>]</span>
     </div>
   </div>
     <?php

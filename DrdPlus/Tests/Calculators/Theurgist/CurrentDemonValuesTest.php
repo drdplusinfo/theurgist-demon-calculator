@@ -5,7 +5,7 @@ use DrdPlus\Calculators\Theurgist\CurrentDemonValues;
 use DrdPlus\Calculators\Theurgist\DemonServicesContainer;
 use DrdPlus\CalculatorSkeleton\CurrentValues;
 use DrdPlus\CalculatorSkeleton\Memory;
-use DrdPlus\Codes\Theurgist\ModifierCode;
+use DrdPlus\Codes\Theurgist\DemonCode;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\ServicesContainer;
@@ -19,26 +19,31 @@ class CurrentDemonValuesTest extends AbstractCalculatorContentTest
     /**
      * @test
      */
-    public function I_can_find_out_if_modifier_is_selected(): void
+    public function I_can_get_current_demon_code()
     {
-        $currentDemonValues = $this->createCurrentDemonValues();
-        self::assertFalse(
-            $currentDemonValues->isModifierSelected(ModifierCode::COLOR, [], 5),
-            'No selected modifier provided so no is selected'
+        $currentDemonValues = new CurrentDemonValues($this->createCurrentValues([]), Tables::getIt());
+        $defaultDemonCode = DemonCode::findIt('nonsense');
+        self::assertSame($defaultDemonCode, $currentDemonValues->getCurrentDemonCode());
+        $currentDemonValues = new CurrentDemonValues(
+            $this->createCurrentValues([CurrentDemonValues::DEMON => DemonCode::IMP]),
+            Tables::getIt()
         );
-        self::assertFalse(
-            $currentDemonValues->isModifierSelected(ModifierCode::COLOR, [5 => []], 5),
-            'No selected modifier selection provided so no modifier is selected'
-        );
-        self::assertFalse(
-            $currentDemonValues->isModifierSelected(ModifierCode::COLOR, [5 => [ModifierCode::BREACH => ModifierCode::BREACH]], 5),
-            'Another modifiers provided so color should not be selected'
-        );
-        self::assertTrue(
-            $currentDemonValues->isModifierSelected(ModifierCode::COLOR, [5 => [ModifierCode::COLOR => ModifierCode::COLOR]], 5)
-        );
-        self::assertFalse($currentDemonValues->isModifierSelected(ModifierCode::COLOR, [5 => [ModifierCode::EXPLOSION => []]], 5));
-        self::assertTrue($currentDemonValues->isModifierSelected(ModifierCode::COLOR, [5 => [ModifierCode::COLOR => []]], 5));
+        self::assertNotSame($defaultDemonCode, DemonCode::getIt(DemonCode::IMP));
+        self::assertSame(DemonCode::getIt(DemonCode::IMP), $currentDemonValues->getCurrentDemonCode());
+    }
+
+    /**
+     * @param array $values
+     * @return CurrentValues|MockInterface
+     */
+    private function createCurrentValues(array $values): CurrentValues
+    {
+        $currentValues = $this->mockery(CurrentValues::class);
+        $currentValues->shouldReceive('getCurrentValue')
+            ->andReturnUsing(function (string $name) use ($values) {
+                return $values[$name] ?? null;
+            });
+        return $currentValues;
     }
 
     /**
@@ -46,10 +51,10 @@ class CurrentDemonValuesTest extends AbstractCalculatorContentTest
      */
     public function I_can_format_number(): void
     {
-        $formulaValues = $this->createCurrentDemonValues();
-        self::assertSame('+123', $formulaValues->formatNumber(new NumberObject(123)));
-        self::assertSame('-456', $formulaValues->formatNumber(new NumberObject(-456)));
-        self::assertSame('+0', $formulaValues->formatNumber(new NumberObject(0)));
+        $currentDemonValues = $this->createCurrentDemonValues();
+        self::assertSame('+123', $currentDemonValues->formatNumber(new NumberObject(123)));
+        self::assertSame('-456', $currentDemonValues->formatNumber(new NumberObject(-456)));
+        self::assertSame('+0', $currentDemonValues->formatNumber(new NumberObject(0)));
     }
 
     private function createCurrentDemonValues(): CurrentDemonValues
@@ -72,7 +77,6 @@ class CurrentDemonValuesTest extends AbstractCalculatorContentTest
      */
     protected function createServicesContainer(Configuration $configuration = null, HtmlHelper $htmlHelper = null): ServicesContainer
     {
-
         return new DemonServicesContainer(
             $configuration ?? $this->getConfiguration(),
             $htmlHelper ?? $this->createHtmlHelper($this->getDirs())

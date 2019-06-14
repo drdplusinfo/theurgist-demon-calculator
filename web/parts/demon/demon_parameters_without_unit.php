@@ -8,7 +8,7 @@ use Granam\String\StringTools;
 
 /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
 
-$formulaParametersWithoutUnit = [
+$demonParametersWithoutUnit = [
     DemonMutableParameterCode::DEMON_CAPACITY,
     DemonMutableParameterCode::DEMON_ENDURANCE,
     DemonMutableParameterCode::DEMON_QUALITY,
@@ -19,7 +19,7 @@ $formulaParametersWithoutUnit = [
     DemonMutableParameterCode::DEMON_KNACK,
 ];
 $demonsTable = $webPartsContainer->getTables()->getDemonsTable();
-foreach ($formulaParametersWithoutUnit as $parameterName) {
+foreach ($demonParametersWithoutUnit as $parameterName) {
     $getParameter = StringTools::assembleGetterForName($parameterName);
     /** @var CastingParameter $parameter */
     $parameter = $demonsTable->$getParameter($webPartsContainer->getCurrentDemonCode());

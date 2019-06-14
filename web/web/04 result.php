@@ -1,9 +1,12 @@
 <?php
 namespace DrdPlus\TheurgistCalculator\Formulas;
 
+use DrdPlus\Codes\Theurgist\DemonMutableParameterCode;
 use DrdPlus\Codes\Theurgist\ModifierMutableParameterCode;
 use DrdPlus\Codes\Units\TimeUnitCode;
+use DrdPlus\Tables\Theurgist\Spells\SpellParameters\Partials\CastingParameter;
 use DrdPlus\Tables\Theurgist\Spells\SpellParameters\RealmsAffection;
+use Granam\String\StringTools;
 
 /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
 
@@ -13,9 +16,7 @@ $resultParts = [];
 
 // Roman numerals are created by browser using ordered list with upper Roman list style type
 $resultParts[] = <<<HTML
-sféra: <ol class="realm font-weight-bold" start="{$currentDemon->getRequiredRealm()}">
-        <li>
-      </ol>
+sféra: {<ol class="realm font-weight-bold" start="{$currentDemon->getRequiredRealm()}"><li></ol>}
 HTML;
 
 $resultParts[] = <<<HTML
@@ -47,7 +48,7 @@ if (($evocationTimeInMinutes = $evocationTime->findMinutes()) && $evocationTime-
 }
 $evocationTimeResult .= ')';
 $resultParts[] = <<<HTML
-vyvolání (příprava démona): <strong>{$evocationTimeResult}</strong>
+vyvolání démona: <strong>{$evocationTimeResult}</strong>
 HTML;
 
 $duration = $currentDemon->getCurrentDemonActivationDuration();
@@ -60,28 +61,27 @@ if ($duration !== null) {
 HTML;
 }
 
-$strength = $currentDemon->getCurrentDemonStrength();
-if ($strength !== null) {
-    $strengthResult = ($strength->getValue() >= 0 ? '+' : '') . $strength->getValue();
-    $resultParts[] = <<<HTML
-{$strength->getStrength()->getCode()->translateTo('cs')}: <strong>{$strengthResult}</strong>
+$demonParametersWithoutUnit = [
+    DemonMutableParameterCode::DEMON_CAPACITY,
+    DemonMutableParameterCode::DEMON_ENDURANCE,
+    DemonMutableParameterCode::DEMON_QUALITY,
+    DemonMutableParameterCode::DEMON_INVISIBILITY,
+    DemonMutableParameterCode::DEMON_ARMOR,
+    DemonMutableParameterCode::DEMON_STRENGTH,
+    DemonMutableParameterCode::DEMON_AGILITY,
+    DemonMutableParameterCode::DEMON_KNACK,
+];
+foreach ($demonParametersWithoutUnit as $demonParameterName) {
+    $parameterGetter = StringTools::assembleGetterForName($demonParameterName, 'getCurrent');
+    /** @var CastingParameter $parameter */
+    $parameter = $currentDemon->$parameterGetter();
+    if ($parameter !== null) {
+        $parameterValueString = ($parameter->getValue() >= 0 ? '+' : '') . $parameter->getValue();
+        $demonParameterCode = DemonMutableParameterCode::getIt($demonParameterName);
+        $resultParts[] = <<<HTML
+{$demonParameterCode->translateTo('cs')}: <strong>{$parameterValueString}</strong>
 HTML;
-}
-
-$agility = $currentDemon->getCurrentDemonAgility();
-if ($agility !== null) {
-    $agilityResult = ($agility->getValue() >= 0 ? '+' : '') . $agility->getValue();
-    $resultParts[] = <<<HTML
-{$strength->getStrength()->getCode()->translateTo('cs')}: <strong>{$agilityResult}</strong>
-HTML;
-}
-
-$knack = $currentDemon->getCurrentDemonKnack();
-if ($knack !== null) {
-    $knackResult = ($knack->getValue() >= 0 ? '+' : '') . $knack->getValue();
-    $resultParts[] = <<<HTML
-{$knack->getKnack()->getCode()->translateTo('cs')}: <strong>{$knackResult}</strong>
-HTML;
+    }
 }
 
 $will = $currentDemon->getCurrentDemonWill();
@@ -104,11 +104,54 @@ if ($radius !== null) {
 HTML;
 }
 
+// TODO crash on navigator
+$area = $currentDemon->getCurrentDemonArea();
+if ($area !== null) {
+    $areaNameInCzech = ModifierMutableParameterCode::getIt(DemonMutableParameterCode::DEMON_AREA)->translateTo('cs');
+    $areaDistance = $area->getDistanceBonus()->getDistance();
+    $areaUnitInCzech = $areaDistance->getUnitCode()->translateTo('cs', $areaDistance->getValue());
+    $areaResult = ($area->getValue() >= 0 ? '+' : '') . "{$area->getValue()} ({$areaDistance->getValue()}
+            {$areaUnitInCzech})";
+    $resultParts[] = <<<HTML
+          {$areaNameInCzech}: <strong>{$areaResult}</strong>
+HTML;
+}
+
 $spellSpeed = $currentDemon->getCurrentSpellSpeed();
 if ($spellSpeed !== null) {
     $speed = $spellSpeed->getSpeedBonus()->getSpeed();
     $spellSpeedUnitInCzech = $speed->getUnitCode()->translateTo('cs', $speed->getValue());
     $resultParts[] = <<<HTML
-rychlost: {$currentDemonValues->formatNumber($spellSpeed)} ({$speed->getValue()} {$spellSpeedUnitInCzech})
+rychlost: <strong>{$currentDemonValues->formatNumber($spellSpeed)} ({$speed->getValue()} {$spellSpeedUnitInCzech})</strong>
 HTML;
 }
+
+$activationDuration = $currentDemon->getCurrentDemonActivationDuration();
+if ($activationDuration !== null) {
+    $activationDurationNameInCzech = DemonMutableParameterCode::getIt(DemonMutableParameterCode::DEMON_ACTIVATION_DURATION)->translateTo('cs');
+    $duration = $activationDuration->getDurationTimeBonus()->getTime();
+    $activationDurationUnitInCzech = $duration->getUnitCode()->translateTo('cs', $duration->getValue());
+    $resultParts[] = <<<HTML
+{$activationDurationNameInCzech}: <strong>{$currentDemonValues->formatNumber($activationDuration)} ({$duration->getValue()} {$activationDurationUnitInCzech})</strong>
+HTML;
+}
+?>
+
+<div id="result">
+  <div class="row">
+      <?php
+      $columnCount = 0;
+      foreach ($resultParts as $resultPart) {
+          if ($columnCount > 0 && $columnCount % 3 === 0) { ?>
+            <div class="row">
+          <?php } ?>
+        <div class="col-sm-4"><?= $resultPart ?></div>
+          <?php if (($columnCount + 1) % 3 === 0) { ?>
+          </div>
+          <?php }
+          $columnCount++;
+      }
+      unset($columnCount);
+      ?>
+  </div>
+</div>
