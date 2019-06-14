@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Calculators\Theurgist;
 
@@ -46,7 +45,7 @@ class DemonWebPartsContainer extends CalculatorWebPartsContainer
 
     public function getCurrentDemon(): Demon
     {
-        return $this->getCurrentDemonValues()->getCurrentFormula();
+        return $this->getCurrentDemonValues()->getCurrentDemon();
     }
 
     public function getCurrentDemonValues(): CurrentDemonValues

@@ -2,13 +2,13 @@
 namespace DrdPlus\Calculators\Theurgist\Web;
 
 use DrdPlus\Calculators\Theurgist\CurrentDemonValues;
-use DrdPlus\Codes\Theurgist\FormulaCode;
+use DrdPlus\Codes\Theurgist\DemonCode;
 
 /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
 ?>
   <div class="row">
     <div class="col">
-      <label for="formula"><strong>Formule</strong>:
+      <label for="demon"><strong>Démon</strong>:
       </label>
     </div>
   </div>
@@ -16,17 +16,17 @@ use DrdPlus\Codes\Theurgist\FormulaCode;
     <div class="col">
       <label>
         <select id="demon" name="<?= CurrentDemonValues::DEMON ?>">
-            <?php foreach (FormulaCode::getPossibleValues() as $formulaValue) { ?>
-              <option value="<?= $formulaValue ?>"
-                      <?php if ($formulaValue === $webPartsContainer->getCurrentDemonCode()->getValue()){ ?>selected<?php } ?>>
-                  <?= FormulaCode::getIt($formulaValue)->translateTo('cs') ?>
+            <?php foreach (DemonCode::getPossibleValues() as $demonValue) { ?>
+              <option value="<?= $demonValue ?>"
+                      <?php if ($demonValue === $webPartsContainer->getCurrentDemonCode()->getValue()){ ?>selected<?php } ?>>
+                  <?= DemonCode::getIt($demonValue)->translateTo('cs') ?>
               </option>
             <?php } ?>
         </select>
       </label>
       <button type="submit">Vybrat</button>
-        <?php $formulaDifficulty = $webPartsContainer->getTables()->getDemonsTable()->getDifficulty($webPartsContainer->getCurrentDemonCode()); ?>
-      <span>[<?= $formulaDifficulty->getValue() ?>]</span>
+        <?php $demonDifficulty = $webPartsContainer->getTables()->getDemonsTable()->getDifficulty($webPartsContainer->getCurrentDemonCode()); ?>
+      <span>[<?= $demonDifficulty->getValue() ?>]</span>
     </div>
   </div>
     <?php

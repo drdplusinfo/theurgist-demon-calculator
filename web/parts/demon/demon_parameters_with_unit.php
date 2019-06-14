@@ -1,12 +1,12 @@
 <?php
-namespace DrdPlus\Theurgist\Formulas;
+namespace DrdPlus\Theurgist\Demons;
 
-use DrdPlus\Codes\Theurgist\FormulaMutableSpellParameterCode;
+use DrdPlus\Codes\Theurgist\DemonMutableParameterCode;
+use DrdPlus\Codes\Theurgist\DemonMutableSpellParameterCode;
 use DrdPlus\Tables\Measurements\Distance\Distance;
 use DrdPlus\Tables\Measurements\Distance\DistanceBonus;
 use DrdPlus\Tables\Measurements\Measurement;
 use DrdPlus\Tables\Measurements\Speed\Speed;
-use DrdPlus\Tables\Measurements\Speed\SpeedBonus;
 use DrdPlus\Tables\Measurements\Time\Time;
 use DrdPlus\Tables\Measurements\Time\TimeBonus;
 use DrdPlus\Tables\Tables;
@@ -15,25 +15,25 @@ use Granam\String\StringTools;
 
 /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
 
-$formulaParametersWithoutUnit = [
-    FormulaMutableSpellParameterCode::SPELL_DURATION => function ($optionDurationValue) {
-        return (new TimeBonus($optionDurationValue, Tables::getIt()->getTimeTable()))->getTime();
+$demonParametersWithUnit = [
+    DemonMutableParameterCode::DEMON_ACTIVATION_DURATION => function ($activationDurationValue) {
+        return (new TimeBonus($activationDurationValue, Tables::getIt()->getTimeTable()))->getTime();
     },
-    FormulaMutableSpellParameterCode::SPELL_RADIUS => function ($optionDurationValue) {
-        return (new DistanceBonus($optionDurationValue, Tables::getIt()->getDistanceTable()))->getDistance();
+    DemonMutableParameterCode::DEMON_AREA => function ($areaValue) {
+        return (new DistanceBonus($areaValue, Tables::getIt()->getDistanceTable()))->getDistance();
     },
-    FormulaMutableSpellParameterCode::SPELL_SPEED => function ($optionDurationValue) {
-        return (new SpeedBonus($optionDurationValue, Tables::getIt()->getSpeedTable()))->getSpeed();
+    DemonMutableParameterCode::DEMON_RADIUS => function ($radiusValue) {
+        return (new DistanceBonus($radiusValue, Tables::getIt()->getDistanceTable()))->getDistance();
     },
 ];
-foreach ($formulaParametersWithoutUnit as $parameterName => $unitFactory) {
+foreach ($demonParametersWithUnit as $parameterName => $unitFactory) {
     $getParameter = StringTools::assembleGetterForName($parameterName);
     /** @var CastingParameter $parameter */
-    $parameter = $webPartsContainer->getTables()->getFormulasTable()->$getParameter($webPartsContainer->getCurrentDemonCode());
+    $parameter = $webPartsContainer->getTables()->getDemonsTable()->$getParameter($webPartsContainer->getCurrentDemonCode());
     if ($parameter === null) {
         continue;
     }
-    $parameterCode = FormulaMutableSpellParameterCode::getIt($parameterName);
+    $parameterCode = DemonMutableSpellParameterCode::getIt($parameterName);
     ?>
   <div class="col">
     <label><?= $parameterCode->translateTo('cs') ?>:
@@ -44,7 +44,7 @@ foreach ($formulaParametersWithoutUnit as $parameterName => $unitFactory) {
         $parameterDifficultyChange = $parameterAdditionByDifficulty->getCurrentDifficultyIncrement();
         /** @var Measurement $previousOptionParameterValueWithUnit */
         $previousOptionParameterValueWithUnit = null;
-        $selectedParameterValue = $webPartsContainer->getCurrentDemonValues()->getCurrentFormulaSpellParameters()[$parameterName] ?? false;
+        $selectedParameterValue = $webPartsContainer->getCurrentDemonValues()->getCurrentDemonSpellParameters()[$parameterName] ?? false;
         ?>
       <select name="formula_parameters[<?= $parameterName ?>]">
           <?php

@@ -1,35 +1,28 @@
 <?php
-/** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
+use DrdPlus\Calculators\Theurgist\CurrentDemonValues;
 
-$spellTraits = $webPartsContainer->getTables()->getFormulasTable()->getSpellTraits($webPartsContainer->getCurrentDemonCode());
-if (count($spellTraits) > 0) {
-    $selectedFormulaSpellTraitValues = $webPartsContainer->getCurrentDemonValues()->getCurrentFormulaSpellTraitValues();
-    $spellTraitsTable = $webPartsContainer->getTables()->getSpellTraitsTable();
-    ?>
-  <div class="row">
-    <div class="col">
-      <strong>Rysy</strong>:
-        <?php foreach ($spellTraits as $spellTrait) {
-            $spellTraitCode = $spellTrait->getSpellTraitCode();
-            ?>
-          <div class="spell-trait">
-            <label>
-              <input type="checkbox" name="formula_spell_traits[]"
-                     value="<?= $spellTraitCode->getValue() ?>"
-                     <?php if (in_array($spellTraitCode->getValue(), $selectedFormulaSpellTraitValues, true)) : ?>checked<?php endif ?>>
-                <?= $spellTraitCode->translateTo('cs') ?>
-                <?php
-                $spellTraitDifficulty = $spellTraitsTable->getDifficultyChange($spellTraitCode);
-                echo '[' . ($spellTraitDifficulty->getValue() >= 0 ? '+' : '') . $spellTraitDifficulty->getValue() . ']' ?>
-                <?php $trap = $spellTraitsTable->getTrap($spellTraitCode);
-                if ($trap !== null) { ?>
-                  <span class="trap">(<?php echo $trap->getValue();
-                      echo " {$trap->getPropertyCode()->translateTo('cs', 1)} [{$trap->getAdditionByDifficulty()}]"; ?>
-                    )</span>
-                <?php } ?>
-            </label>
-          </div>
-        <?php } ?>
-    </div>
+/** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
+$demonTraits = $webPartsContainer->getTables()->getDemonsTable()->getDemonTraits($webPartsContainer->getCurrentDemonCode());
+if (!$demonTraits) {
+    return '';
+}
+$currentDemonTraitValues = $webPartsContainer->getCurrentDemonValues()->getCurrentDemonTraitValues();
+$demonTraitsTable = $webPartsContainer->getTables()->getDemonTraitsTable();
+?>
+<div class="row">
+  <div class="col">
+    <strong>Rysy</strong>:
+      <?php foreach ($demonTraits as $demonTrait) {
+          $demonTraitCode = $demonTrait->getDemonTraitCode();
+          ?>
+        <div class="spell-trait">
+          <label>
+            <input type="checkbox" name="<?= CurrentDemonValues::DEMON_TRAITS ?>[]"
+                   value="<?= $demonTraitCode->getValue() ?>"
+                   <?php if (in_array($demonTraitCode->getValue(), $currentDemonTraitValues, true)) : ?>checked<?php endif ?>>
+              <?= $demonTraitCode->translateTo('cs') ?> {<?= $demonTrait->getRequiredRealm()->getValue() ?> }
+          </label>
+        </div>
+      <?php } ?>
   </div>
-<?php } ?>
+</div>
