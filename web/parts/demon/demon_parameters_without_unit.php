@@ -44,7 +44,7 @@ foreach ($demonParametersWithoutUnit as $parameterName) {
           do {
               if ($previousOptionParameterValue === null || $previousOptionParameterValue < $optionParameterValue) { ?>
                 <option value="<?= $optionParameterValue ?>"
-                        <?php if ($selectedParameterValue !== false && $selectedParameterValue === $optionParameterValue){ ?>selected<?php } ?>>
+                        <?php if ($selectedParameterValue !== false && (string)$selectedParameterValue === (string)$optionParameterValue){ ?>selected<?php } ?>>
                     <?= ($optionParameterValue >= 0 ? '+' : '')
                     . "{$optionParameterValue} [{$parameterDifficultyChange}]"; ?>
                 </option>

@@ -8,6 +8,7 @@ use DrdPlus\Codes\Theurgist\DemonTraitCode;
 use DrdPlus\Tables\Tables;
 use DrdPlus\Tables\Theurgist\Demons\Demon;
 use DrdPlus\Tables\Theurgist\Demons\DemonTrait;
+use Granam\Integer\Tools\ToInteger;
 use Granam\Number\NumberInterface;
 use Granam\Strict\Object\StrictObject;
 
@@ -24,6 +25,14 @@ class CurrentDemonValues extends StrictObject
     private $currentDemonCode;
     /** @var Tables */
     private $tables;
+    /** @var Demon|null */
+    private $currentDemon;
+    /** @var array|DemonTrait[]|null */
+    private $currentDemonTraits;
+    /** @var array|string[]|null */
+    private $currentDemonParameterValues;
+    /** @var array|int[]|null */
+    private $currentDemonTraitValues;
 
     public function __construct(CurrentValues $currentValues, Tables $tables)
     {
@@ -52,27 +61,36 @@ class CurrentDemonValues extends StrictObject
     /**
      * @return array|string[]
      */
-    public function getCurrentDemonTraitValues(): array
+    public function getCurrentDemonParameterValues(): array
     {
-        $formulaSpellTraits = $this->currentValues->getCurrentValue(self::DEMON_TRAITS);
-        if ($formulaSpellTraits === null || $this->isDemonChanged()) {
-            return [];
+        if ($this->currentDemonParameterValues === null) {
+            $demonParameterValues = $this->currentValues->getCurrentValue(self::DEMON_PARAMETERS);
+            if ($demonParameterValues === null || $this->isDemonChanged()) {
+                $demonParameterValues = [];
+            }
+            $this->currentDemonParameterValues = array_map(
+                function ($demonParameter) {
+                    return ToInteger::toInteger($demonParameter);
+                },
+                (array)$demonParameterValues
+            );
         }
-
-        return (array)$formulaSpellTraits;
+        return $this->currentDemonParameterValues;
     }
 
     /**
      * @return array|string[]
      */
-    public function getCurrentDemonParameterValues(): array
+    public function getCurrentDemonTraitValues(): array
     {
-        $demonParameters = $this->currentValues->getCurrentValue(self::DEMON_PARAMETERS);
-        if ($demonParameters === null || $this->isDemonChanged()) {
-            return [];
+        if ($this->currentDemonTraitValues === null) {
+            $demonTraitValues = $this->currentValues->getCurrentValue(self::DEMON_TRAITS);
+            if ($demonTraitValues === null || $this->isDemonChanged()) {
+                $demonTraitValues = [];
+            }
+            $this->currentDemonTraitValues = (array)$demonTraitValues;
         }
-
-        return (array)$demonParameters;
+        return $this->currentDemonTraitValues;
     }
 
     /**
@@ -80,22 +98,28 @@ class CurrentDemonValues extends StrictObject
      */
     public function getCurrentDemonTraits(): array
     {
-        return array_map(
-            function (string $demonTraitValue) {
-                return new DemonTrait(DemonTraitCode::getIt($demonTraitValue), $this->tables);
-            },
-            $this->getCurrentDemonTraitValues()
-        );
+        if ($this->currentDemonTraits === null) {
+            $this->currentDemonTraits = array_map(
+                function (string $demonTraitValue) {
+                    return new DemonTrait(DemonTraitCode::getIt($demonTraitValue), $this->tables);
+                },
+                $this->getCurrentDemonTraitValues()
+            );
+        }
+        return $this->currentDemonTraits;
     }
 
     public function getCurrentDemon(): Demon
     {
-        return new Demon(
-            $this->getCurrentDemonCode(),
-            $this->tables,
-            $this->getCurrentDemonParameterValues(),
-            $this->getCurrentDemonTraits()
-        );
+        if ($this->currentDemon === null) {
+            $this->currentDemon = new Demon(
+                $this->getCurrentDemonCode(),
+                $this->tables,
+                $this->getCurrentDemonParameterValues(),
+                $this->getCurrentDemonTraits()
+            );
+        }
+        return $this->currentDemon;
     }
 
     public function formatNumber(NumberInterface $number): string

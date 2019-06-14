@@ -18,7 +18,7 @@ use DrdPlus\Codes\Theurgist\DemonCode;
         <select id="demon" name="<?= CurrentDemonValues::DEMON ?>">
             <?php foreach (DemonCode::getPossibleValues() as $demonValue) { ?>
               <option value="<?= $demonValue ?>"
-                      <?php if ($demonValue === $webPartsContainer->getCurrentDemonCode()->getValue()){ ?>selected<?php } ?>>
+                      <?php if ($demonValue === $webPartsContainer->getCurrentDemon()->getDemonCode()->getValue()){ ?>selected<?php } ?>>
                   <?= DemonCode::getIt($demonValue)->translateTo('cs') ?>
                 [<?= $webPartsContainer->getTables()->getDemonsTable()->getDifficulty(DemonCode::getIt($demonValue)) ?>]
               </option>
