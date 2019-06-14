@@ -62,6 +62,7 @@ ol.realm li {
     padding: 0;
     position: relative;
     left: 3px;
+    font-family: initial;
 }
 
 input[disabled], select[disabled] {
