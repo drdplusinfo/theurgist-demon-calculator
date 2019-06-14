@@ -1,12 +1,13 @@
 <?php
 namespace DrdPlus\Theurgist\Demons;
 
+use DrdPlus\Calculators\Theurgist\CurrentDemonValues;
 use DrdPlus\Codes\Theurgist\DemonMutableParameterCode;
-use DrdPlus\Codes\Theurgist\DemonMutableSpellParameterCode;
 use DrdPlus\Tables\Measurements\Distance\Distance;
 use DrdPlus\Tables\Measurements\Distance\DistanceBonus;
 use DrdPlus\Tables\Measurements\Measurement;
 use DrdPlus\Tables\Measurements\Speed\Speed;
+use DrdPlus\Tables\Measurements\Speed\SpeedBonus;
 use DrdPlus\Tables\Measurements\Time\Time;
 use DrdPlus\Tables\Measurements\Time\TimeBonus;
 use DrdPlus\Tables\Tables;
@@ -25,6 +26,9 @@ $demonParametersWithUnit = [
     DemonMutableParameterCode::DEMON_RADIUS => function ($radiusValue) {
         return (new DistanceBonus($radiusValue, Tables::getIt()->getDistanceTable()))->getDistance();
     },
+    DemonMutableParameterCode::SPELL_SPEED => function ($speedValue) {
+        return (new SpeedBonus($speedValue, Tables::getIt()->getSpeedTable()))->getSpeed();
+    },
 ];
 foreach ($demonParametersWithUnit as $parameterName => $unitFactory) {
     $getParameter = StringTools::assembleGetterForName($parameterName);
@@ -33,7 +37,7 @@ foreach ($demonParametersWithUnit as $parameterName => $unitFactory) {
     if ($parameter === null) {
         continue;
     }
-    $parameterCode = DemonMutableSpellParameterCode::getIt($parameterName);
+    $parameterCode = DemonMutableParameterCode::getIt($parameterName);
     ?>
   <div class="col">
     <label><?= $parameterCode->translateTo('cs') ?>:
@@ -44,9 +48,9 @@ foreach ($demonParametersWithUnit as $parameterName => $unitFactory) {
         $parameterDifficultyChange = $parameterAdditionByDifficulty->getCurrentDifficultyIncrement();
         /** @var Measurement $previousOptionParameterValueWithUnit */
         $previousOptionParameterValueWithUnit = null;
-        $selectedParameterValue = $webPartsContainer->getCurrentDemonValues()->getCurrentDemonSpellParameters()[$parameterName] ?? false;
+        $selectedParameterValue = $webPartsContainer->getCurrentDemonValues()->getCurrentDemonParameterValues()[$parameterName] ?? false;
         ?>
-      <select name="formula_parameters[<?= $parameterName ?>]">
+      <select name="<?= CurrentDemonValues::DEMON_PARAMETERS ?>[<?= $parameterName ?>]">
           <?php
           do {
               $optionParameterValue = $parameter->getValue(); // from the lowest

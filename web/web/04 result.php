@@ -1,27 +1,28 @@
 <?php
 namespace DrdPlus\TheurgistCalculator\Formulas;
 
-use DrdPlus\Codes\Theurgist\FormulaMutableSpellParameterCode;
+use DrdPlus\Codes\Theurgist\ModifierMutableParameterCode;
 use DrdPlus\Codes\Units\TimeUnitCode;
 use DrdPlus\Tables\Theurgist\Spells\SpellParameters\RealmsAffection;
 
 /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */
 
-$currentFormula = $webPartsContainer->getCurrentDemon();
-$currentFormulaValues = $webPartsContainer->getCurrentDemonValues();
+$currentDemon = $webPartsContainer->getCurrentDemon();
+$currentDemonValues = $webPartsContainer->getCurrentDemonValues();
 $resultParts = [];
+
 // Roman numerals are created by browser using ordered list with upper Roman list style type
-/** @noinspection PhpUnhandledExceptionInspection */
 $resultParts[] = <<<HTML
-sféra: <ol class="realm font-weight-bold" start="{$currentFormula->getRequiredRealm()}">
+sféra: <ol class="realm font-weight-bold" start="{$currentDemon->getRequiredRealm()}">
         <li>
       </ol>
 HTML;
-/** @noinspection PhpUnhandledExceptionInspection */
+
 $resultParts[] = <<<HTML
-náročnost: [<strong>{$currentFormula->getCurrentDifficulty()->getValue()}</strong>]
+náročnost: [<strong>{$currentDemon->getCurrentDifficulty()->getValue()}</strong>]
 HTML;
-$realmsAffections = $currentFormula->getCurrentRealmsAffections();
+
+$realmsAffections = $currentDemon->getCurrentRealmsAffections();
 $realmsAffectionsInCzech = [];
 /** @var RealmsAffection $realmsAffection */
 foreach ($realmsAffections as $realmsAffection) {
@@ -34,7 +35,8 @@ $realmsAffectionsResult = implode(', ', $realmsAffectionsInCzech);
 $resultParts[] = <<<HTML
 {$realmAffectionName}: <strong>{$realmsAffectionsResult}</strong>
 HTML;
-$evocation = $currentFormula->getCurrentEvocation();
+
+$evocation = $currentDemon->getCurrentEvocation();
 $evocationTime = $evocation->getEvocationTimeBonus()->getTime();
 $evocationUnitInCzech = $evocationTime->getUnitCode()->translateTo('cs', $evocationTime->getValue());
 $evocationTimeResult = ($evocation->getValue() >= 0 ? '+' : '') . $evocation->getValue();
@@ -45,28 +47,54 @@ if (($evocationTimeInMinutes = $evocationTime->findMinutes()) && $evocationTime-
 }
 $evocationTimeResult .= ')';
 $resultParts[] = <<<HTML
-vyvolání (příprava formule): <strong>{$evocationTimeResult}</strong>
+vyvolání (příprava démona): <strong>{$evocationTimeResult}</strong>
 HTML;
-$castingRounds = $currentFormula->getCurrentCastingRounds();
-$castingBonus = $castingRounds->getTimeBonus();
-$casting = $castingBonus->getTime();
-$castingUnitInCzech = $casting->getUnitCode()->translateTo('cs', $casting->getValue());
-$castingText = ($castingBonus->getValue() >= 0 ? '+' : '') . "{$castingBonus->getValue()} ({$casting->getValue()} {$castingUnitInCzech})";
-$resultParts[] = <<<HTML
-seslání (vypuštění kouzla): <strong>{$castingText}</strong>
-HTML;
-/** @noinspection PhpUnhandledExceptionInspection */
-$duration = $currentFormula->getCurrentSpellDuration();
-$durationTime = $duration->getDurationTimeBonus()->getTime();
-$durationUnitInCzech = $durationTime->getUnitCode()->translateTo('cs', $durationTime->getValue());
-$durationResult = ($duration->getValue() >= 0 ? '+' : '') . "{$duration->getValue()} ({$durationTime->getValue()} {$durationUnitInCzech})";
-$resultParts[] = <<<HTML
+
+$duration = $currentDemon->getCurrentDemonActivationDuration();
+if ($duration !== null) {
+    $durationTime = $duration->getDurationTimeBonus()->getTime();
+    $durationUnitInCzech = $durationTime->getUnitCode()->translateTo('cs', $durationTime->getValue());
+    $durationResult = ($duration->getValue() >= 0 ? '+' : '') . "{$duration->getValue()} ({$durationTime->getValue()} {$durationUnitInCzech})";
+    $resultParts[] = <<<HTML
     doba trvání: <strong>{$durationResult}</strong>
 HTML;
-/** @noinspection PhpUnhandledExceptionInspection */
-$radius = $currentFormula->getCurrentSpellRadius();
+}
+
+$strength = $currentDemon->getCurrentDemonStrength();
+if ($strength !== null) {
+    $strengthResult = ($strength->getValue() >= 0 ? '+' : '') . $strength->getValue();
+    $resultParts[] = <<<HTML
+{$strength->getStrength()->getCode()->translateTo('cs')}: <strong>{$strengthResult}</strong>
+HTML;
+}
+
+$agility = $currentDemon->getCurrentDemonAgility();
+if ($agility !== null) {
+    $agilityResult = ($agility->getValue() >= 0 ? '+' : '') . $agility->getValue();
+    $resultParts[] = <<<HTML
+{$strength->getStrength()->getCode()->translateTo('cs')}: <strong>{$agilityResult}</strong>
+HTML;
+}
+
+$knack = $currentDemon->getCurrentDemonKnack();
+if ($knack !== null) {
+    $knackResult = ($knack->getValue() >= 0 ? '+' : '') . $knack->getValue();
+    $resultParts[] = <<<HTML
+{$knack->getKnack()->getCode()->translateTo('cs')}: <strong>{$knackResult}</strong>
+HTML;
+}
+
+$will = $currentDemon->getCurrentDemonWill();
+if ($will !== null) {
+    $willResult = ($will->getValue() >= 0 ? '+' : '') . $will->getValue();
+    $resultParts[] = <<<HTML
+{$will->getWill()->getCode()->translateTo('cs')}: <strong>{$willResult}</strong>
+HTML;
+}
+
+$radius = $currentDemon->getCurrentDemonRadius();
 if ($radius !== null) {
-    $radiusNameInCzech = FormulaMutableSpellParameterCode::getIt(FormulaMutableSpellParameterCode::SPELL_RADIUS)->translateTo('cs');
+    $radiusNameInCzech = ModifierMutableParameterCode::getIt(ModifierMutableParameterCode::SPELL_RADIUS)->translateTo('cs');
     $radiusDistance = $radius->getDistanceBonus()->getDistance();
     $radiusUnitInCzech = $radiusDistance->getUnitCode()->translateTo('cs', $radiusDistance->getValue());
     $radiusResult = ($radius->getValue() >= 0 ? '+' : '') . "{$radius->getValue()} ({$radiusDistance->getValue()}
@@ -75,77 +103,12 @@ if ($radius !== null) {
           {$radiusNameInCzech}: <strong>{$radiusResult}</strong>
 HTML;
 }
-/** @noinspection PhpUnhandledExceptionInspection */
-$power = $currentFormula->getCurrentSpellPower();
-if ($power !== null) {
-    $powerResult = ($power->getValue() >= 0 ? '+' : '') . $power->getValue();
-    $resultParts[] = <<<HTML
-síla: <strong>{$powerResult}</strong>
-HTML;
-}
-/** @noinspection PhpUnhandledExceptionInspection */
-$epicenterShiftOfModified = $currentFormula->getCurrentEpicenterShift();
-if ($epicenterShiftOfModified !== null) {
-    $epicenterShiftDistance = $epicenterShiftOfModified->getDistance();
-    $epicenterShiftUnitInCzech = $epicenterShiftDistance->getUnitCode()->translateTo('cs', $epicenterShiftDistance->getValue());
-    $epicenterShiftResult = ($epicenterShiftOfModified->getValue() >= 0 ? '+' : '') .
-        "{$epicenterShiftOfModified->getValue()} ({$epicenterShiftDistance->getValue()} {$epicenterShiftUnitInCzech})";
-    $resultParts[] = <<<HTML
-posun transpozicí: <strong>{$epicenterShiftResult}</strong>
-HTML;
-}
-/** @noinspection PhpUnhandledExceptionInspection */
-$detailLevel = $currentFormula->getCurrentDetailLevel();
-if ($detailLevel !== null) {
-    $resultParts[] = <<<HTML
-detailnost: <strong>{$currentFormulaValues->formatNumber($detailLevel)}</strong>
-HTML;
-}
-/** @noinspection PhpUnhandledExceptionInspection */
-$sizeChange = $currentFormula->getCurrentSizeChange();
-if ($sizeChange !== null) {
-    $resultParts[] = <<<HTML
-změna velikosti: <strong>{$currentFormulaValues->formatNumber($sizeChange)}</strong>
-HTML;
-}
-/** @noinspection PhpUnhandledExceptionInspection */
-$brightness = $currentFormula->getCurrentSpellBrightness();
-if ($brightness !== null) {
-    $resultParts[] = <<<HTML
-jas: {$currentFormulaValues->formatNumber($brightness)}
-HTML;
-}
-/** @noinspection PhpUnhandledExceptionInspection */
-$spellSpeed = $currentFormula->getCurrentSpellSpeed();
+
+$spellSpeed = $currentDemon->getCurrentSpellSpeed();
 if ($spellSpeed !== null) {
     $speed = $spellSpeed->getSpeedBonus()->getSpeed();
     $spellSpeedUnitInCzech = $speed->getUnitCode()->translateTo('cs', $speed->getValue());
     $resultParts[] = <<<HTML
-rychlost: {$currentFormulaValues->formatNumber($spellSpeed)} ({$speed->getValue()} {$spellSpeedUnitInCzech})
+rychlost: {$currentDemonValues->formatNumber($spellSpeed)} ({$speed->getValue()} {$spellSpeedUnitInCzech})
 HTML;
 }
-/** @noinspection PhpUnhandledExceptionInspection */
-$attack = $currentFormula->getCurrentSpellAttack();
-if ($attack !== null) {
-    $resultParts[] = <<<HTML
-útočnost: {$currentFormulaValues->formatNumber($attack)}
-HTML;
-} ?>
-<div id="result">
-  <div class="row">
-      <?php
-      $columnCount = 0;
-      foreach ($resultParts as $resultPart) {
-          if ($columnCount > 0 && $columnCount % 3 === 0) { ?>
-            <div class="row">
-          <?php } ?>
-        <div class="col-sm-4"><?= $resultPart ?></div>
-          <?php if (($columnCount + 1) % 3 === 0) { ?>
-          </div>
-          <?php }
-          $columnCount++;
-      }
-      unset($columnCount);
-      ?>
-  </div>
-</div>

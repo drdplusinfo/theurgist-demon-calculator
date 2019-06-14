@@ -15,6 +15,7 @@ class CurrentDemonValues extends StrictObject
 {
     public const DEMON = 'demon';
     public const PREVIOUS_DEMON = 'previous_demon';
+    public const DEMON_PARAMETERS = 'demon_parameters';
     public const DEMON_TRAITS = 'demon_traits';
 
     /** @var CurrentValues */
@@ -62,6 +63,19 @@ class CurrentDemonValues extends StrictObject
     }
 
     /**
+     * @return array|string[]
+     */
+    public function getCurrentDemonParameterValues(): array
+    {
+        $demonParameters = $this->currentValues->getCurrentValue(self::DEMON_PARAMETERS);
+        if ($demonParameters === null || $this->isDemonChanged()) {
+            return [];
+        }
+
+        return (array)$demonParameters;
+    }
+
+    /**
      * @return array|DemonTrait[]
      */
     public function getCurrentDemonTraits(): array
@@ -78,6 +92,8 @@ class CurrentDemonValues extends StrictObject
     {
         return new Demon(
             $this->getCurrentDemonCode(),
+            $this->tables,
+            $this->getCurrentDemonParameterValues(),
             $this->getCurrentDemonTraits()
         );
     }

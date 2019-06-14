@@ -9,9 +9,5 @@
   <div class="row">
     <hr class="col">
   </div>
-    <?php require __DIR__ . '/../parts/modifiers/modifiers.php' ?>
-  <div class="row">
-    <hr class="col">
-  </div>
   <button type="submit">Vybrat</button>
 </form>
