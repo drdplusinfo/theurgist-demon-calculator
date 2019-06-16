@@ -8,6 +8,11 @@
       "DrdPlus\\": "DrdPlus/"
     }
   },
+  "repositories": [{
+    "url": "/home/jaroslav/projects/drdplus/codes",
+    "type": "vcs"
+  }
+  ],
   "require": {
     "php": ">=7.1",
     "drdplus/calculator-skeleton": "~1.0",

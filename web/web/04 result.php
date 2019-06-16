@@ -2,7 +2,6 @@
 namespace DrdPlus\TheurgistCalculator\Formulas;
 
 use DrdPlus\Codes\Theurgist\DemonMutableParameterCode;
-use DrdPlus\Codes\Theurgist\ModifierMutableParameterCode;
 use DrdPlus\Codes\Units\TimeUnitCode;
 use DrdPlus\Tables\Theurgist\Spells\SpellParameters\Partials\CastingParameter;
 use DrdPlus\Tables\Theurgist\Spells\SpellParameters\RealmsAffection;
@@ -57,7 +56,7 @@ if ($duration !== null) {
     $durationUnitInCzech = $durationTime->getUnitCode()->translateTo('cs', $durationTime->getValue());
     $durationResult = ($duration->getValue() >= 0 ? '+' : '') . "{$duration->getValue()} ({$durationTime->getValue()} {$durationUnitInCzech})";
     $resultParts[] = <<<HTML
-    doba trvání: <strong>{$durationResult}</strong>
+doba trvání: <strong>{$durationResult}</strong>
 HTML;
 }
 
@@ -94,20 +93,19 @@ HTML;
 
 $radius = $currentDemon->getCurrentDemonRadius();
 if ($radius !== null) {
-    $radiusNameInCzech = ModifierMutableParameterCode::getIt(ModifierMutableParameterCode::SPELL_RADIUS)->translateTo('cs');
+    $radiusNameInCzech = DemonMutableParameterCode::getIt(DemonMutableParameterCode::SPELL_RADIUS)->translateTo('cs');
     $radiusDistance = $radius->getDistanceBonus()->getDistance();
     $radiusUnitInCzech = $radiusDistance->getUnitCode()->translateTo('cs', $radiusDistance->getValue());
     $radiusResult = ($radius->getValue() >= 0 ? '+' : '') . "{$radius->getValue()} ({$radiusDistance->getValue()}
             {$radiusUnitInCzech})";
     $resultParts[] = <<<HTML
-          {$radiusNameInCzech}: <strong>{$radiusResult}</strong>
+{$radiusNameInCzech}: <strong>{$radiusResult}</strong>
 HTML;
 }
 
-// TODO crash on navigator
 $area = $currentDemon->getCurrentDemonArea();
 if ($area !== null) {
-    $areaNameInCzech = ModifierMutableParameterCode::getIt(DemonMutableParameterCode::DEMON_AREA)->translateTo('cs');
+    $areaNameInCzech = DemonMutableParameterCode::getIt(DemonMutableParameterCode::DEMON_AREA)->translateTo('cs');
     $areaDistance = $area->getDistanceBonus()->getDistance();
     $areaUnitInCzech = $areaDistance->getUnitCode()->translateTo('cs', $areaDistance->getValue());
     $areaResult = ($area->getValue() >= 0 ? '+' : '') . "{$area->getValue()} ({$areaDistance->getValue()}
@@ -135,6 +133,25 @@ if ($activationDuration !== null) {
 {$activationDurationNameInCzech}: <strong>{$currentDemonValues->formatNumber($activationDuration)} ({$duration->getValue()} {$activationDurationUnitInCzech})</strong>
 HTML;
 }
+
+$usedDemonTraitNames = [];
+foreach ($currentDemon->getDemonTraits() as $demonTrait) {
+    $usedDemonTraitNames[] = $demonTrait->getDemonTraitCode()->translateTo('cs');
+}
+if ($usedDemonTraitNames) {
+    $usedDemonTraitNamesString = implode(' ,', $usedDemonTraitNames);
+    $resultParts[] = <<<HTML
+rysy: <strong>{$usedDemonTraitNamesString}</strong>
+HTML;
+}
+
+$resultParts[] = <<<HTML
+tělo: <strong>{$currentDemon->getDemonBodyCode()->translateTo('cs')}</strong>
+HTML;
+
+$resultParts[] = <<<HTML
+druh: <strong>{$currentDemon->getDemonKindCode()->translateTo('cs')}</strong>
+HTML;
 ?>
 
 <div id="result">

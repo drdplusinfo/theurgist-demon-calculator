@@ -6,6 +6,7 @@ use DrdPlus\Codes\Theurgist\DemonMutableParameterCode;
 use DrdPlus\Tables\Measurements\Distance\Distance;
 use DrdPlus\Tables\Measurements\Distance\DistanceBonus;
 use DrdPlus\Tables\Measurements\Measurement;
+use DrdPlus\Tables\Measurements\Partials\Exceptions\UnknownBonus;
 use DrdPlus\Tables\Measurements\Speed\Speed;
 use DrdPlus\Tables\Measurements\Speed\SpeedBonus;
 use DrdPlus\Tables\Measurements\Time\Time;
@@ -55,7 +56,11 @@ foreach ($demonParametersWithUnit as $parameterName => $unitFactory) {
           do {
               $optionParameterValue = $parameter->getValue(); // from the lowest
               /** @var Distance|Time|Speed $optionValueWithUnit */
-              $optionValueWithUnit = $unitFactory($optionParameterValue);
+              try {
+                  $optionValueWithUnit = $unitFactory($optionParameterValue);
+              } catch (UnknownBonus $unknownBonus) {
+                  break; // we have reached the limit
+              }
               if (!$previousOptionParameterValueWithUnit
                   || $previousOptionParameterValueWithUnit->getUnit() !== $optionValueWithUnit->getUnit()
                   || $previousOptionParameterValueWithUnit->getValue() < $optionValueWithUnit->getValue()
