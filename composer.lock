@@ -136,11 +136,11 @@
         },
         {
             "name": "drdplus/codes",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/projects/drdplus/codes",
-                "reference": "ebd12fb11b44afb7dd7b7c4fe37641b259b843a3"
+                "reference": "f56fa579fa560ebd62341a936618950a617d2d1f"
             },
             "require": {
                 "granam/number": "^4.0",
@@ -165,7 +165,7 @@
                 "MIT"
             ],
             "description": "Codes of Drd+ races, properties",
-            "time": "2019-06-14T16:27:24+00:00"
+            "time": "2019-06-16T06:36:10+00:00"
         },
         {
             "name": "drdplus/rules-skeleton",
