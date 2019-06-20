@@ -943,17 +943,17 @@
     },
     {
         "name": "granam/git",
-        "version": "1.2.3",
-        "version_normalized": "1.2.3.0",
+        "version": "1.2.4",
+        "version_normalized": "1.2.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/granam/git.git",
-            "reference": "37c02c6e5bc7cf7fe3c85d2581dcd506c8134885"
+            "reference": "679ea2c1d48553fe44326d247b561bda12af4235"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/granam/git/zipball/37c02c6e5bc7cf7fe3c85d2581dcd506c8134885",
-            "reference": "37c02c6e5bc7cf7fe3c85d2581dcd506c8134885",
+            "url": "https://api.github.com/repos/granam/git/zipball/679ea2c1d48553fe44326d247b561bda12af4235",
+            "reference": "679ea2c1d48553fe44326d247b561bda12af4235",
             "shasum": ""
         },
         "require": {
@@ -964,7 +964,7 @@
             "granam/exceptions-hierarchy": "^4.0",
             "phpunit/phpunit": "^7.3"
         },
-        "time": "2019-04-16T08:20:01+00:00",
+        "time": "2019-06-20T14:19:05+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
