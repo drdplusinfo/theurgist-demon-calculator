@@ -20,7 +20,7 @@ $demonTraitsTable = $webPartsContainer->getTables()->getDemonTraitsTable();
             <input type="checkbox" name="<?= CurrentDemonValues::DEMON_TRAITS ?>[]"
                    value="<?= $demonTraitCode->getValue() ?>"
                    <?php if (in_array($demonTraitCode->getValue(), $currentDemonTraitValues, true)) : ?>checked<?php endif ?>>
-              <?= $demonTraitCode->translateTo('cs') ?> {<ol class="realm" start="<?= $demonTrait->getRequiredRealm()->getValue() ?>"><li></ol>}
+              <?= $demonTraitCode->translateTo('cs') ?> {<?= $webPartsContainer->getCurrentDemonValues()->formatNumber($demonTrait->getRealmsAddition()) ?>}
           </label>
         </div>
       <?php } ?>

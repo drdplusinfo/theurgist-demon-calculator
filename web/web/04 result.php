@@ -13,10 +13,20 @@ $currentDemon = $webPartsContainer->getCurrentDemon();
 $currentDemonValues = $webPartsContainer->getCurrentDemonValues();
 $resultParts = [];
 
+if ($currentDemon->getRequiredRealm()->getValue() === $currentDemon->getEffectiveRealm()->getValue()) {
 // Roman numerals are created by browser using ordered list with upper Roman list style type
-$resultParts[] = <<<HTML
+    $resultParts[] = <<<HTML
 sféra: {<ol class="realm font-weight-bold" start="{$currentDemon->getRequiredRealm()}"><li></ol>}
 HTML;
+} else {
+    // Roman numerals are created by browser using ordered list with upper Roman list style type
+    $resultParts[] = <<<HTML
+sféra <a href="https://theurg.drdplus.info/#parametry_a_rysy_demona">původu a moci démona</a>: {<ol class="realm font-weight-bold" start="{$currentDemon->getEffectiveRealm()}"><li></ol>}
+HTML;
+    $resultParts[] = <<<HTML
+sféra pro <a href="https://theurg.drdplus.info/#parametry_a_rysy_demona">vyvolání démona</a>: {<ol class="realm font-weight-bold" start="{$currentDemon->getRequiredRealm()}"><li></ol>}
+HTML;
+}
 
 $resultParts[] = <<<HTML
 náročnost: [<strong>{$currentDemon->getCurrentDifficulty()->getValue()}</strong>]
@@ -75,8 +85,12 @@ foreach ($demonParametersWithoutUnit as $demonParameterName) {
     /** @var CastingParameter $parameter */
     $parameter = $currentDemon->$parameterGetter();
     if ($parameter !== null) {
-        $parameterValueString = ($parameter->getValue() >= 0 ? '+' : '') . $parameter->getValue();
         $demonParameterCode = DemonMutableParameterCode::getIt($demonParameterName);
+        if ($currentDemon->hasUnlimitedEndurance() && $demonParameterCode->is(DemonMutableParameterCode::DEMON_ENDURANCE)) {
+            $parameterValueString = 'neomezená';
+        } else {
+            $parameterValueString = ($parameter->getValue() >= 0 ? '+' : '') . $parameter->getValue();
+        }
         $resultParts[] = <<<HTML
 {$demonParameterCode->translateTo('cs')}: <strong>{$parameterValueString}</strong>
 HTML;
@@ -139,7 +153,7 @@ foreach ($currentDemon->getDemonTraits() as $demonTrait) {
     $usedDemonTraitNames[] = $demonTrait->getDemonTraitCode()->translateTo('cs');
 }
 if ($usedDemonTraitNames) {
-    $usedDemonTraitNamesString = implode(' ,', $usedDemonTraitNames);
+    $usedDemonTraitNamesString = implode(', ', $usedDemonTraitNames);
     $resultParts[] = <<<HTML
 rysy: <strong>{$usedDemonTraitNamesString}</strong>
 HTML;
