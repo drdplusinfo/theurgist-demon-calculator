@@ -58,8 +58,11 @@ foreach ($demonParametersWithoutUnit as $parameterName) {
               $parameter = $parameter->getWithAddition($optionParameterChange);
               $parameterAdditionByDifficulty = $parameter->getAdditionByDifficulty();
               $parameterDifficultyChange = $parameterAdditionByDifficulty->getCurrentDifficultyIncrement();
-          } while (!$disabled && $additionStep > 0 /* at least once even if no addition is possible */ && $parameterDifficultyChange < 21) ?>
+          } while ($additionStep > 0 /* at least once even if no addition is possible */ && $parameterDifficultyChange < 21) ?>
       </select>
     </label>
+      <?php if ($disabled) { ?>
+        <input type="hidden" name="<?= CurrentDemonValues::DEMON_PARAMETERS ?>[<?= $parameterName ?>]" value="<?= $selectedParameterValue ?>">
+      <?php } ?>
   </div>
 <?php } ?>
