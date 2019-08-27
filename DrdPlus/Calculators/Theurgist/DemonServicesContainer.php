@@ -15,6 +15,9 @@ class DemonServicesContainer extends CalculatorServicesContainer
     /** @var CurrentDemonValues */
     private $currentDemonValues;
 
+    /**
+     * @return WebPartsContainer|DemonWebPartsContainer
+     */
     public function getWebPartsContainer(): WebPartsContainer
     {
         if ($this->demonWebPartsContainer === null) {
@@ -34,7 +37,10 @@ class DemonServicesContainer extends CalculatorServicesContainer
     public function getCurrentDemonValues(): CurrentDemonValues
     {
         if ($this->currentDemonValues === null) {
-            $this->currentDemonValues = new CurrentDemonValues($this->getCurrentValues(), $this->getTables());
+            $this->currentDemonValues = new CurrentDemonValues(
+                $this->getCurrentValues(),
+                $this->getTables()
+            );
         }
 
         return $this->currentDemonValues;

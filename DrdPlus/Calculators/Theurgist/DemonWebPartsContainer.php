@@ -14,13 +14,9 @@ use DrdPlus\Tables\Theurgist\Demons\Demon;
 
 class DemonWebPartsContainer extends CalculatorWebPartsContainer
 {
-    /**
-     * @var CurrentDemonValues
-     */
+    /** @var CurrentDemonValues */
     private $currentDemonValues;
-    /**
-     * @var Tables
-     */
+    /** @var Tables */
     private $tables;
 
     public function __construct(
