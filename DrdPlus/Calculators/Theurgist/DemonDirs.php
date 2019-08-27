@@ -2,13 +2,16 @@
 
 namespace DrdPlus\Calculators\Theurgist;
 
-use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\RoutedDirs;
 
-class DemonDirs extends Dirs
+class DemonDirs extends RoutedDirs
 {
     public function getWebRoot(): string
     {
-        return $this->getProjectRoot() . '/web/web/';
+        $webRoot = $this->getProjectRoot() . '/web/web';
+        if ($this->getRelativeWebRoot() !== '') {
+            $webRoot .= '/' . $this->getRelativeWebRoot();
+        }
+        return $webRoot;
     }
-
 }

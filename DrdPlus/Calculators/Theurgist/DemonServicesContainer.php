@@ -4,6 +4,7 @@ namespace DrdPlus\Calculators\Theurgist;
 
 use DrdPlus\CalculatorSkeleton\CalculatorServicesContainer;
 use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\RoutedDirs;
 use DrdPlus\RulesSkeleton\Web\WebPartsContainer;
 use DrdPlus\Tables\Tables;
 
@@ -44,9 +45,8 @@ class DemonServicesContainer extends CalculatorServicesContainer
         return Tables::getIt();
     }
 
-    protected function createRoutedDirs(Dirs $dirs): Dirs
+    protected function createRoutedDirs(Dirs $dirs): RoutedDirs
     {
-        $match = $this->getRulesUrlMatcher()->match($this->getRequest()->getCurrentUrl());
-        return new DemonDirs($dirs->getProjectRoot(), $match->getPath());
+        return new DemonDirs($dirs->getProjectRoot(), $this->getPathProvider());
     }
 }
