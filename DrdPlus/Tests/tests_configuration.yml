@@ -14,6 +14,7 @@ has_headings: false
 has_ids: false
 has_calculations: false
 has_pdf: false
+has_marked_content: false
 expected_web_name: 'DrD+ démon pro theurga'
 expected_page_title: '👻 DrD+ démon pro theurga'
 expected_google_analytics_id: 'UA-121206931-21'
