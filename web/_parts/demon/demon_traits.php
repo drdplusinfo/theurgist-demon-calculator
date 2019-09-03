@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 use DrdPlus\Calculators\Theurgist\CurrentDemonValues;
 
 /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */

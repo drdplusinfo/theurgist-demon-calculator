@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace DrdPlus\TheurgistCalculator\Formulas;
 
 use DrdPlus\Codes\Theurgist\DemonMutableParameterCode;
@@ -107,7 +108,7 @@ HTML;
 
 $radius = $currentDemon->getCurrentDemonRadius();
 if ($radius !== null) {
-    $radiusNameInCzech = DemonMutableParameterCode::getIt(DemonMutableParameterCode::SPELL_RADIUS)->translateTo('cs');
+    $radiusNameInCzech = DemonMutableParameterCode::getIt(DemonMutableParameterCode::DEMON_RADIUS)->translateTo('cs');
     $radiusDistance = $radius->getDistanceBonus()->getDistance();
     $radiusUnitInCzech = $radiusDistance->getUnitCode()->translateTo('cs', $radiusDistance->getValue());
     $radiusResult = ($radius->getValue() >= 0 ? '+' : '') . "{$radius->getValue()} ({$radiusDistance->getValue()}

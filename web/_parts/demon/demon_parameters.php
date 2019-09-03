@@ -1,3 +1,4 @@
+<?php declare(strict_types=1); ?>
 <div class="row">
   <span class="col"><strong>Parametry</strong>:</span>
 </div>

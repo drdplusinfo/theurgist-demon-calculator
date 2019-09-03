@@ -1,11 +1,12 @@
-<?php /** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */ ?>
+<?php declare(strict_types=1);
+/** @var \DrdPlus\Calculators\Theurgist\DemonWebPartsContainer $webPartsContainer */ ?>
 <div class="row">
   <hr class="col">
 </div>
 <form id="configurator" action="" method="get">
   <input type="hidden" name="<?= DrdPlus\Calculators\Theurgist\CurrentDemonValues::PREVIOUS_DEMON ?>"
          value="<?= $webPartsContainer->getCurrentDemonCode()->getValue() ?>">
-    <?php require __DIR__ . '/../parts/demon/demon.php'; ?>
+    <?php require __DIR__ . '/_parts/demon/demon.php'; ?>
   <div class="row">
     <hr class="col">
   </div>
