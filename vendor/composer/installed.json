@@ -454,17 +454,17 @@
     },
     {
         "name": "drdplus/calculator-skeleton",
-        "version": "1.1.6",
-        "version_normalized": "1.1.6.0",
+        "version": "1.1.7",
+        "version_normalized": "1.1.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/drdplusinfo/calculator-skeleton.git",
-            "reference": "6ad0f0bfdc3654291ca511661cb94a1d1d5b54b1"
+            "reference": "cb37959ef08aa2972eefc57c5d4d0eb9a74e5dd1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/drdplusinfo/calculator-skeleton/zipball/6ad0f0bfdc3654291ca511661cb94a1d1d5b54b1",
-            "reference": "6ad0f0bfdc3654291ca511661cb94a1d1d5b54b1",
+            "url": "https://api.github.com/repos/drdplusinfo/calculator-skeleton/zipball/cb37959ef08aa2972eefc57c5d4d0eb9a74e5dd1",
+            "reference": "cb37959ef08aa2972eefc57c5d4d0eb9a74e5dd1",
             "shasum": ""
         },
         "require": {
@@ -480,7 +480,7 @@
             "phpunit/phpunit": "~8.3",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2019-08-27T06:48:39+00:00",
+        "time": "2019-09-02T14:53:01+00:00",
         "type": "composer-plugin",
         "extra": {
             "class": "DrdPlus\\CalculatorSkeleton\\CalculatorInjectorComposerPlugin"
@@ -540,17 +540,17 @@
     },
     {
         "name": "drdplus/rules-skeleton",
-        "version": "1.6.0",
-        "version_normalized": "1.6.0.0",
+        "version": "1.6.1",
+        "version_normalized": "1.6.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/drdplusinfo/rules-skeleton.git",
-            "reference": "1b4c3fda903574f139df15e959ee44670d72c2eb"
+            "reference": "bf6b7ce59c1cfe661fe296e0ecf55d6ae34b30a8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/1b4c3fda903574f139df15e959ee44670d72c2eb",
-            "reference": "1b4c3fda903574f139df15e959ee44670d72c2eb",
+            "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/bf6b7ce59c1cfe661fe296e0ecf55d6ae34b30a8",
+            "reference": "bf6b7ce59c1cfe661fe296e0ecf55d6ae34b30a8",
             "shasum": ""
         },
         "require": {
@@ -583,7 +583,7 @@
             "phpunit/phpunit": "^8.3",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2019-08-28T06:11:39+00:00",
+        "time": "2019-09-02T11:42:57+00:00",
         "bin": [
             "bin/fix_web_permissions.sh"
         ],
@@ -611,18 +611,12 @@
     },
     {
         "name": "drdplus/tables",
-        "version": "2.5.0",
-        "version_normalized": "2.5.0.0",
+        "version": "2.5.1",
+        "version_normalized": "2.5.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/drdplusinfo/tables.git",
-            "reference": "5cea455c2ce12f30e645e2976ef31496b00fef47"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/drdplusinfo/tables/zipball/5cea455c2ce12f30e645e2976ef31496b00fef47",
-            "reference": "5cea455c2ce12f30e645e2976ef31496b00fef47",
-            "shasum": ""
+            "url": "/home/jaroslav/projects/drdplus/tables",
+            "reference": "874048b690acafea7e90219952ee7872a637a148"
         },
         "require": {
             "drdplus/base-properties": "^2.1",
@@ -638,15 +632,14 @@
             "phpunit/phpunit": "^8.3",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2019-08-23T11:11:34+00:00",
+        "time": "2019-09-03T07:45:38+00:00",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "DrdPlus\\": "DrdPlus/"
             }
         },
-        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
         ],

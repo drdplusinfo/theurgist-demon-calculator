@@ -20,6 +20,12 @@
     "phpunit/phpunit": "^8.3",
     "roave/security-advisories": "dev-master"
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "/home/jaroslav/projects/drdplus/tables"
+    }
+  ],
   "config": {
     "sort-packages": true
   },

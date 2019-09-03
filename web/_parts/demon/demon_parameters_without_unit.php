@@ -29,7 +29,8 @@ foreach ($demonParametersWithoutUnit as $parameterName) {
         continue;
     }
     $demonMutableParameterCode = DemonMutableParameterCode::getIt($parameterName);
-    $disabled = $currentDemon->hasUnlimitedEndurance() && $demonMutableParameterCode->is(DemonMutableParameterCode::DEMON_ENDURANCE);
+    $disabled = ($currentDemon->hasUnlimitedEndurance() && $demonMutableParameterCode->is(DemonMutableParameterCode::DEMON_ENDURANCE))
+        || ($currentDemon->hasUnlimitedCapacity() && $demonMutableParameterCode->is(DemonMutableParameterCode::DEMON_CAPACITY));
     ?>
   <div class="col">
     <label><?= $demonMutableParameterCode->translateTo('cs') ?>:

@@ -87,7 +87,9 @@ foreach ($demonParametersWithoutUnit as $demonParameterName) {
     $parameter = $currentDemon->$parameterGetter();
     if ($parameter !== null) {
         $demonParameterCode = DemonMutableParameterCode::getIt($demonParameterName);
-        if ($currentDemon->hasUnlimitedEndurance() && $demonParameterCode->is(DemonMutableParameterCode::DEMON_ENDURANCE)) {
+        if (($currentDemon->hasUnlimitedEndurance() && $demonParameterCode->is(DemonMutableParameterCode::DEMON_ENDURANCE))
+            || ($currentDemon->hasUnlimitedCapacity() && $demonParameterCode->is(DemonMutableParameterCode::DEMON_CAPACITY))
+        ) {
             $parameterValueString = 'neomezená';
         } else {
             $parameterValueString = ($parameter->getValue() >= 0 ? '+' : '') . $parameter->getValue();
