@@ -69,7 +69,7 @@ class CurrentDemonValues extends StrictObject
                 $demonParameterValues = [];
             }
             $this->currentDemonParameterValues = array_map(
-                function ($demonParameter) {
+                static function ($demonParameter) {
                     return ToInteger::toInteger($demonParameter);
                 },
                 (array)$demonParameterValues

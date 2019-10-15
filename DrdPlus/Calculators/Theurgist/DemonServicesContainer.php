@@ -16,12 +16,12 @@ class DemonServicesContainer extends CalculatorServicesContainer
     /**
      * @return WebPartsContainer|DemonWebPartsContainer
      */
-    public function getWebPartsContainer(): WebPartsContainer
+    public function getRoutedWebPartsContainer(): WebPartsContainer
     {
         if ($this->demonWebPartsContainer === null) {
             $this->demonWebPartsContainer = new DemonWebPartsContainer(
                 $this->getPass(),
-                $this->getWebFiles(),
+                $this->getRoutedWebFiles(),
                 $this->getDirs(),
                 $this->getHtmlHelper(),
                 $this->getRequest(),
