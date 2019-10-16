@@ -3,13 +3,16 @@
 namespace DrdPlus\Calculators\Theurgist;
 
 use DrdPlus\CalculatorSkeleton\CalculatorServicesContainer;
+use DrdPlus\RulesSkeleton\Web\WebFiles;
 use DrdPlus\RulesSkeleton\Web\WebPartsContainer;
 use DrdPlus\Tables\Tables;
 
 class DemonServicesContainer extends CalculatorServicesContainer
 {
     /** @var DemonWebPartsContainer */
-    private $demonWebPartsContainer;
+    private $routedDemonWebPartsContainer;
+    /** @var DemonWebPartsContainer */
+    private $rootDemonWebPartsContainer;
     /** @var CurrentDemonValues */
     private $currentDemonValues;
 
@@ -18,18 +21,34 @@ class DemonServicesContainer extends CalculatorServicesContainer
      */
     public function getRoutedWebPartsContainer(): WebPartsContainer
     {
-        if ($this->demonWebPartsContainer === null) {
-            $this->demonWebPartsContainer = new DemonWebPartsContainer(
-                $this->getPass(),
-                $this->getRoutedWebFiles(),
-                $this->getDirs(),
-                $this->getHtmlHelper(),
-                $this->getRequest(),
-                $this->getCurrentDemonValues(),
-                $this->getTables()
-            );
+        if ($this->routedDemonWebPartsContainer === null) {
+            $this->routedDemonWebPartsContainer = $this->createDemonWebPartsContainer($this->getRoutedWebFiles());
         }
-        return $this->demonWebPartsContainer;
+        return $this->routedDemonWebPartsContainer;
+    }
+
+    private function createDemonWebPartsContainer(WebFiles $webFiles): DemonWebPartsContainer
+    {
+        return new DemonWebPartsContainer(
+            $this->getPass(),
+            $webFiles,
+            $this->getDirs(),
+            $this->getHtmlHelper(),
+            $this->getRequest(),
+            $this->getCurrentDemonValues(),
+            $this->getTables()
+        );
+    }
+
+    /**
+     * @return WebPartsContainer|DemonWebPartsContainer
+     */
+    public function getRootWebPartsContainer(): WebPartsContainer
+    {
+        if ($this->rootDemonWebPartsContainer === null) {
+            $this->rootDemonWebPartsContainer = $this->createDemonWebPartsContainer($this->getRootWebFiles());
+        }
+        return $this->rootDemonWebPartsContainer;
     }
 
     public function getCurrentDemonValues(): CurrentDemonValues
